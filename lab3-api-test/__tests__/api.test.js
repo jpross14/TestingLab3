@@ -10,18 +10,15 @@ const dbPath = path.join(__dirname, '../testDB.json');
 
 
 describe('API tests', () => {
-    let createdTaskId; // Store ID of a task to test update/delete
+    let createdTaskId;
 
-    // Create a task first (setup for update/delete tests)
     beforeAll(async () => {
       const newTask = { task: "Test task for update/delete" };
       const response = await request(API_URL)
         .post('/')
         .send(newTask);
-      createdTaskId = response.body.id; // Assuming the response includes the ID
+      createdTaskId = response.body.id;
     });
-
-
 
     // Happy path - POST -  expected to pass and passes
     it('should create a new task', async () => {
@@ -68,15 +65,15 @@ describe('API tests', () => {
       const response = await request(API_URL)
         .delete(`/${createdTaskId}`);
 
-      expect(response.status).toBe(200); // Or 204 (No Content)
-      expect(response.body.message).toBe('Task deleted'); // Adjust based on your API
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('Task deleted');
     });
 
 
     // SAD PATHS ===============================================
 
 
-    //  Sad Path - POST - this should fail as its thewrong endpoint
+    //  Sad Path - POST - this should fail as its the wrong endpoint
     it('should create a new task', async () => {
       const newTask = { task: "This should be a failed. It shouldn't appear in any DB"};
 
@@ -125,6 +122,18 @@ describe('API tests', () => {
 
       expect(response.status).toBe(404);
     });
+
+    // Sad Path - UPDATE with invalid ID format - this should fail
+  it('should return 404 for invalid ID format', async () => {
+    const invalidId = "not-a-number";
+    const updatedTask = { task: "Valid task, invalid ID" };
+
+    const response = await request(API_URL)
+      .put(`/${invalidId}`)
+      .send(updatedTask);
+
+    expect(response.status).toBe(404);
+  });
 
     // Sad Path - DELETE non-existent task - it should fail
     it('should return 404 when deleting a non-existent task', async () => {
