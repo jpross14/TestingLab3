@@ -1,4 +1,7 @@
-simple todo list app
+- simple todo list app
+
+- uses React and Typecript
+- database is local
 
 To run:
 1. clone the repository:  https://github.com/jpross14/TestingLab3.git
