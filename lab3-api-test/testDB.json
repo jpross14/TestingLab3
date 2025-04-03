@@ -1,3 +1,36 @@
 {
-  "todos": []
+  "todos": [
+    {
+      "id": "2be7",
+      "task": "This is a testDB POST-test task"
+    },
+    {
+      "id": "3083",
+      "task": 1234534
+    },
+    {
+      "id": "cd35",
+      "task": "This is a testDB POST-test task"
+    },
+    {
+      "id": "de35",
+      "task": 1234534
+    },
+    {
+      "id": "b4cf",
+      "task": "This is a testDB POST-test task"
+    },
+    {
+      "id": "1317",
+      "task": 1234534
+    },
+    {
+      "id": "d956",
+      "task": "This is a testDB POST-test task"
+    },
+    {
+      "id": "064a",
+      "task": 1234534
+    }
+  ]
 }

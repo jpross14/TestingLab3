@@ -10,8 +10,20 @@ const dbPath = path.join(__dirname, '../testDB.json');
 
 
 describe('API tests', () => {
+    let createdTaskId; // Store ID of a task to test update/delete
 
-    // Happy path - POST - expected to pass and passes
+    // Create a task first (setup for update/delete tests)
+    beforeAll(async () => {
+      const newTask = { task: "Test task for update/delete" };
+      const response = await request(API_URL)
+        .post('/')
+        .send(newTask);
+      createdTaskId = response.body.id; // Assuming the response includes the ID
+    });
+
+
+
+    // Happy path - POST -  expected to pass and passes
     it('should create a new task', async () => {
         const newTask = { task: "This is a testDB POST-test task" };
     
@@ -33,18 +45,43 @@ describe('API tests', () => {
 
           expect(response.status).toBe(200);
           expect(Array.isArray(response.body)).toBe(true);
-  
+
         } catch (error) {
           console.error(error.message);
         }
     });
 
-    //  Sad Path - POST - expected to pass but fails
+    // Happy Path - UPDATE - this should pass
+    it('should update an existing task', async () => {
+      const updatedTask = { task: "Updated task text" };
+
+      const response = await request(API_URL)
+        .put(`/${createdTaskId}`)
+        .send(updatedTask);
+
+      expect(response.status).toBe(200);
+      expect(response.body.task).toBe(updatedTask.task); // Verify the updated task
+    });
+
+    // Happy Path - DELETE - this should pass
+    it('should delete an existing task', async () => {
+      const response = await request(API_URL)
+        .delete(`/${createdTaskId}`);
+
+      expect(response.status).toBe(200); // Or 204 (No Content)
+      expect(response.body.message).toBe('Task deleted'); // Adjust based on your API
+    });
+
+
+    // SAD PATHS ===============================================
+
+
+    //  Sad Path - POST - this should fail as its thewrong endpoint
     it('should create a new task', async () => {
       const newTask = { task: "This should be a failed. It shouldn't appear in any DB"};
-  
+
       const response = await request(API_URL)
-        .post('/todos')
+        .post('/todds')
         .send(newTask);
 
       expect(response.status).toBe(201);
@@ -77,8 +114,29 @@ describe('API tests', () => {
         expect(response.body).not.toHaveProperty('status');
     });
 
+    // Sad Path - UPDATE non-existent task - this should fail
+    it('should return 404 when updating a non-existent task', async () => {
+      const fakeId = '999999'; // Non-existent ID
+      const updatedTask = { task: "This should fail" };
 
+      const response = await request(API_URL)
+        .put(`/${fakeId}`)
+        .send(updatedTask);
 
+      expect(response.status).toBe(404);
+    });
+
+    // Sad Path - DELETE non-existent task - it should fail
+    it('should return 404 when deleting a non-existent task', async () => {
+      const fakeId = '999999'; // Non-existent ID
+
+      const response = await request(API_URL)
+        .delete(`/${fakeId}`);
+
+      expect(response.status).toBe(404);
+    });
+
+    
 
 
     // Clears testDB after the test runs
