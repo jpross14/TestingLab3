@@ -47,5 +47,11 @@
   },
   "babel": {
   "presets": ["@babel/preset-env"]
+  },
+  "jest": {
+    "clearMocks": true,
+    "testEnvironment": "node"
   }
+
+  
 }

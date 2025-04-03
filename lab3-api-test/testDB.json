@@ -1,16 +1,3 @@
 {
-  "todos": [
-    {
-      "id": "1e1d",
-      "task": "This is a testDB POST-test task"
-    },
-    {
-      "id": "a4f9",
-      "task": "This is a testDB POST-test task"
-    },
-    {
-      "id": "0404",
-      "task": "This is a testDB POST-test task"
-    }
-  ]
+  "todos": []
 }
